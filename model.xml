@@ -2,7 +2,7 @@
 <draftsman project-name="Academie" xmlns="https://tracepaper.draftsman.io">
 	<global>
 		<pattern name="TelefoonNummer" regex="^(\+\d{1,3})?\s?\(?\d{1,4}\)?[\s.-]?\d{3}[\s.-]?\d{4}$"></pattern>
-		<pattern name="TrainingType" regex="^(Procesbeheer HR|Procesbeheer Payroll|)$"></pattern>
+		<pattern name="TrainingType" regex="^(Procesbeheer HR|Procesbeheer Payroll|Applicatiebeheer HR)$"></pattern>
 		<pattern name="Email" regex="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"></pattern>
 	</global>
 	<events>
@@ -206,5 +206,23 @@
 		</notifier>
 	</notifiers>
 	<functional-scenarios clean-db="true" clean-iam="true" minimum-event-coverage="80" minimum-view-coverage="80">
+		<scenario extends="" name="VraagTrainingAan">
+			<activity path="Training.vraagAan" type="mutation" description="Vraag training aan" id="AGGmMZ">
+				<input name="aanvraagId" type="String" value="1234"></input>
+				<input name="type" type="String" value="Applicatiebeheer HR"></input>
+				<input name="naamOrganisatie" type="String" value="Draftsman.io"></input>
+				<input name="locatieOrganisatie" type="String" value="Kerkrade"></input>
+				<input name="voorkeursDag" type="String" value="geen voorkeur"></input>
+				<input name="klantCase" type="String" value="Cta price point enough to wash your face. Create spaces to explore whatâ€™s next back of the net big data code win-win-win punter, so granularity. Rehydrate the team sorry i was triple muted, yet let's take this conversation offline i know you're busy. Incentivization touch base clear blue water game-plan, idea shower, nor 4-blocker, and we are running out of runway. Unlock meaningful moments of relaxation."></input>
+				<input name="contactpersoon" type="Nested" value='[{"naam":"j.doe","email":"j.doe@example.com","telefoonNummer":"+868005551234"}]'></input>
+				<input name="deelnemer" type="Nested" value='[{"naam":"j.doe","email":"j.doe@example.com"}]'></input>
+				<expected-trace command="Education.Training.Create" status="success"></expected-trace>
+			</activity>
+			<activity path="-select-" type="grant-role" description="Make sure user is administrator" role="administrator" id="Tj9pfP"></activity>
+			<activity path="Training.get" description="Check if traing is created" type="query" view="Training" id="tOe4jA">
+				<input name="key" type="String" value="1234"></input>
+				<expect-value name="naamOrganisatie" type="String" value="Draftsman.io"></expect-value>
+			</activity>
+		</scenario>
 	</functional-scenarios>
 </draftsman>

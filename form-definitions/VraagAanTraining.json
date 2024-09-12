@@ -15,7 +15,7 @@
     "name": "type",
     "title": "Type",
     "type": "String",
-    "pattern": "^(Procesbeheer HR|Procesbeheer Payroll|)$",
+    "pattern": "^(Procesbeheer HR|Procesbeheer Payroll|Applicatiebeheer HR)$",
     "placeholder": "",
     "default": ""
   },
