@@ -213,7 +213,7 @@
 				<input name="naamOrganisatie" type="String" value="Draftsman.io"></input>
 				<input name="locatieOrganisatie" type="String" value="Kerkrade"></input>
 				<input name="voorkeursDag" type="String" value="geen voorkeur"></input>
-				<input name="klantCase" type="String" value="Cta price point enough to wash your face. Create spaces to explore whatâ€™s next back of the net big data code win-win-win punter, so granularity. Rehydrate the team sorry i was triple muted, yet let's take this conversation offline i know you're busy. Incentivization touch base clear blue water game-plan, idea shower, nor 4-blocker, and we are running out of runway. Unlock meaningful moments of relaxation."></input>
+				<input name="klantCase" type="String" value="Hello World!"></input>
 				<input name="contactpersoon" type="Nested" value='[{"naam":"j.doe","email":"j.doe@example.com","telefoonNummer":"+868005551234"}]'></input>
 				<input name="deelnemer" type="Nested" value='[{"naam":"j.doe","email":"j.doe@example.com"}]'></input>
 				<expected-trace command="Education.Training.Create" status="success"></expected-trace>
