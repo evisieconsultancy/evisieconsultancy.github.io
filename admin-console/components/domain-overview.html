@@ -1,0 +1,65 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="domain-overview">
+    <div class="row gx-5">
+            <div class="col-3">
+                <h4>Commands</h4>
+                <center>
+                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                        
+                        <button type="button" class="btn btn-outline-primary"
+                                @click="Draftsman.empty_track_and_trace_log();component = 'VraagAanTraining'"
+                                x-show="'vraagaantraining'.includes(search.toLowerCase())">
+                            VraagAanTraining
+                        </button>
+                        
+                    </div>
+                </center>
+            </div>
+            <div class="col-6">
+                
+                <div x-show="component == 'VraagAanTraining'" x-cloak x-transition>
+                    <div x-import="commands/VraagAanTraining">
+                        <h6>VraagAanTraining</h6>
+                        <ui-VraagAanTraining></ui-VraagAanTraining>
+                    </div>
+                </div>
+
+                
+
+                
+                <div x-show="component == 'Training/get'" x-cloak x-transition>
+                    <div x-import="views/Training/get">
+                        <h6>Training.get</h6>
+                        <ui-Training-get></ui-Training-get>
+                    </div>
+                </div>
+
+                
+                <div x-show="component == 'Training/filter'" x-cloak x-transition>
+                    <div x-import="views/Training/filter">
+                        <h6>Training.filter</h6>
+                        <ui-Training-filter></ui-Training-filter>
+                    </div>
+                </div>
+
+                
+
+            </div>
+            <div class="col-3">
+                <h4>Queries</h4>
+                <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'training.get'.includes(search.toLowerCase())"
+                            @click="component = 'Training/get'">Training.get
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-primary"
+                            x-show="'training.filter'.includes(search.toLowerCase())"
+                            @click="component = 'Training/filter'">Training.filter
+                    </button>
+                    
+                </div>
+            </div>
+        </div>
+</template>

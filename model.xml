@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<draftsman project-name="Academie" xmlns="https://tracepaper.draftsman.io">
+	<global>
+		<pattern name="TelefoonNummer" regex="^(\+\d{1,3})?\s?\(?\d{1,4}\)?[\s.-]?\d{3}[\s.-]?\d{4}$"></pattern>
+		<pattern name="TrainingType" regex="^(Procesbeheer HR|Procesbeheer Payroll|)$"></pattern>
+		<pattern name="Email" regex="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"></pattern>
+	</global>
+	<events>
+		<event graphql-namespace="Training" graphql-name="vraagAan" name="VraagAanTrainingRequested" type="ActorEvent">
+			<field name="aanvraagId" type="String"></field>
+			<field name="type" type="String" pattern="{{TrainingType}}"></field>
+			<field name="naamOrganisatie" type="String"></field>
+			<field name="locatieOrganisatie" type="String"></field>
+			<field name="voorkeursDag" type="String" default="geen voorkeur"></field>
+			<field name="klantCase" type="String"></field>
+			<nested-object name="contactpersoon">
+				<field name="naam" type="String"></field>
+				<field name="email" type="String" pattern="{{Email}}"></field>
+				<field name="telefoonNummer" type="String" pattern="{{TelefoonNummer}}"></field>
+			</nested-object>
+			<nested-object name="deelnemer" business-key="naam">
+				<field name="naam" type="String"></field>
+				<field name="email" type="String" pattern="{{Email}}" default=""></field>
+			</nested-object>
+		</event>
+		<event name="TrainingCreated" source="Education.Training" type="DomainEvent">
+			<field name="aanvraagId" type="String"></field>
+			<field name="type" type="String"></field>
+			<field name="naamOrganisatie" type="String"></field>
+			<field name="locatieOrganisatie" type="String"></field>
+			<field name="voorkeursDag" type="String"></field>
+			<field name="klantCase" type="String"></field>
+			<nested-object name="contactpersoon">
+				<field name="naam" type="String"></field>
+				<field name="email" type="String"></field>
+				<field name="telefoonNummer" type="String"></field>
+			</nested-object>
+			<nested-object name="deelnemer">
+				<field name="naam" type="String"></field>
+				<field name="email" type="String"></field>
+			</nested-object>
+		</event>
+		<event name="FileUploaded" type="DomainEvent" source="appsync">
+			<field name="bucket" type="String"></field>
+			<field name="uri" type="String"></field>
+			<field name="location" type="String"></field>
+			<field name="username" type="String"></field>
+		</event>
+	</events>
+	<domain>
+		<subdomain name="Education">
+			<aggregate name="Training" business-key="aanvraagId" event-ttl="-1" snapshot-interval="100" backup-interval-days="0" backup-ttl-days="0">
+				<field name="aanvraagId" type="String"></field>
+				<field name="type" type="String"></field>
+				<field name="naamOrganisatie" type="String"></field>
+				<field name="locatieOrganisatie" type="String"></field>
+				<field name="voorkeursDag" type="String"></field>
+				<field name="klantCase" type="String"></field>
+				<command name="Create">
+					<trigger source="VraagAanTrainingRequested" key-field="aanvraagId">
+						<mapping target="aanvraagId" value="aanvraagId"></mapping>
+						<mapping target="type" value="type"></mapping>
+						<mapping target="naamOrganisatie" value="naamOrganisatie"></mapping>
+						<mapping target="locatieOrganisatie" value="locatieOrganisatie"></mapping>
+						<mapping target="voorkeursDag" value="voorkeursDag"></mapping>
+						<mapping target="klantCase" value="klantCase"></mapping>
+						<mapping target="contactpersoon" value="contactpersoon"></mapping>
+						<mapping target="deelnemer" value="deelnemer"></mapping>
+					</trigger>
+					<processor type="validator" condition="len(flow.contactpersoon) == 1" id="7beWyU" exception="Er moet exact 1 contactpersoon opgegeven zijn"></processor>
+					<processor condition="len(flow.deelnemer) in [1,2]" type="validator" exception="Er kunnen 1 of 2 deelnemers opgegeven worden" id="dUG8sh"></processor>
+					<processor type="emit-event" ref="TrainingCreated" id="YlCcdW">
+						<mapping target="aanvraagId" value="#flow.aanvraagId"></mapping>
+						<mapping target="type" value="#flow.type"></mapping>
+						<mapping target="naamOrganisatie" value="#flow.naamOrganisatie"></mapping>
+						<mapping target="locatieOrganisatie" value="#flow.locatieOrganisatie"></mapping>
+						<mapping target="voorkeursDag" value="#flow.voorkeursDag"></mapping>
+						<mapping target="klantCase" value="#flow.klantCase"></mapping>
+						<mapping target="contactpersoon" value="#flow.contactpersoon"></mapping>
+						<mapping target="deelnemer" value="#flow.deelnemer"></mapping>
+					</processor>
+					<test-case name="CreateTraining" trigger-event="VraagAanTrainingRequested" expected-processing-status="success">
+						<input name="aanvraagId" type="String" value="aanvraag"></input>
+						<input name="type" type="String" value="Applicatiebeheer HR"></input>
+						<input name="naamOrganisatie" type="String" value="Draftsman.io"></input>
+						<input name="locatieOrganisatie" type="String" value="Kerkrade"></input>
+						<input name="voorkeursDag" type="String" value="geen voorkeur"></input>
+						<input name="klantCase" type="String" value="Vrije tekst hier"></input>
+						<input name="contactpersoon" type="NestedObject">[
+  {
+    "naam": "Bo Hanssen",
+    "email": "dummy@dummy.org",
+    "telefoonNummer": "+316123456"
+  }
+]</input>
+						<input name="deelnemer" type="NestedObject">[
+  {
+    "naam": "Bo Hanssen",
+    "email": "dummy@dummy.org"
+  }
+]</input>
+						<expected domain-event="TrainingCreated" id="FetXAH">
+							<field name="aanvraagId" type="String" value="aanvraag"></field>
+							<field name="type" type="String" value="Applicatiebeheer HR"></field>
+							<field name="naamOrganisatie" type="String" value="Draftsman.io"></field>
+							<field name="locatieOrganisatie" type="String" value="Kerkrade"></field>
+							<field name="voorkeursDag" type="String" value="geen voorkeur"></field>
+							<field name="klantCase" type="String" value="Vrije tekst hier"></field>
+						</expected>
+						<state>{}</state>
+						<expected-state pk="aanvraag">{
+  "aanvraagId": "aanvraag",
+  "type": "Applicatiebeheer HR",
+  "naamOrganisatie": "Draftsman.io",
+  "locatieOrganisatie": "Kerkrade",
+  "voorkeursDag": "geen voorkeur",
+  "klantCase": "Vrije tekst hier",
+  "contactpersoon": {
+    "Bo Hanssen": {
+      "naam": "Bo Hanssen",
+      "email": "dummy@dummy.org",
+      "telefoonNummer": "+316123456"
+    }
+  },
+  "deelnemer": {
+    "Bo Hanssen": {
+      "naam": "Bo Hanssen",
+      "email": "dummy@dummy.org"
+    }
+  }
+}</expected-state>
+					</test-case>
+				</command>
+				<event-handler on="TrainingCreated">
+					<mapping target="aanvraagId" value="aanvraagId" operand="set"></mapping>
+					<mapping target="type" value="type" operand="set"></mapping>
+					<mapping target="naamOrganisatie" value="naamOrganisatie" operand="set"></mapping>
+					<mapping target="locatieOrganisatie" value="locatieOrganisatie" operand="set"></mapping>
+					<mapping target="voorkeursDag" value="voorkeursDag" operand="set"></mapping>
+					<mapping target="klantCase" value="klantCase" operand="set"></mapping>
+					<nested-mapping source="contactpersoon" target="contactpersoon" strategy="replace" business-key="naam">
+						<mapping target="naam" value="naam" operand="set"></mapping>
+						<mapping target="email" value="email" operand="set"></mapping>
+						<mapping target="telefoonNummer" value="telefoonNummer" operand="set"></mapping>
+					</nested-mapping>
+					<nested-mapping source="deelnemer" target="deelnemer" strategy="replace" business-key="naam">
+						<mapping target="naam" value="naam" operand="set"></mapping>
+						<mapping target="email" value="email" operand="set"></mapping>
+					</nested-mapping>
+				</event-handler>
+				<nested-object name="contactpersoon">
+					<field name="naam" type="String"></field>
+					<field name="email" type="String"></field>
+					<field name="telefoonNummer" type="String"></field>
+				</nested-object>
+				<nested-object name="deelnemer" business-key="naam">
+					<field name="naam" type="String"></field>
+					<field name="email" type="String"></field>
+				</nested-object>
+			</aggregate>
+		</subdomain>
+	</domain>
+	<views>
+		<view name="Training" data-retention-days="-1" exclude-notification="false">
+			<field name="aanvraagId" type="String" pk="true"></field>
+			<field name="trainingType" type="String"></field>
+			<field name="naamOrganisatie" type="String"></field>
+			<field name="locatieOrganisatie" type="String"></field>
+			<field name="voorkeursDag" type="String"></field>
+			<field name="klantCase" type="String"></field>
+			<field name="deelnemer" type="ObjectList" ref="Deelnemer" authorization="authenticated"></field>
+			<field name="contactpersoon" type="ObjectList" ref="Contactpersoon" authorization="authenticated"></field>
+			<snapshot-handler id="FvrUDC" processor="item" sub-domain="Education" aggregate="Training" key-mapping="aanvraagId">
+				<mapping target="aanvraagId" value="aanvraagId" operand="set"></mapping>
+				<mapping target="naamOrganisatie" value="naamOrganisatie" operand="set"></mapping>
+				<mapping target="locatieOrganisatie" value="locatieOrganisatie" operand="set"></mapping>
+				<mapping target="voorkeursDag" value="voorkeursDag" operand="set"></mapping>
+				<mapping target="klantCase" value="klantCase" operand="set"></mapping>
+				<mapping target="contactpersoon" value="contactpersoon" operand="convert_items" template='{ "naam": value["naam"], "email": value["email"], "telefoonNummer": value["telefoonNummer"], }'></mapping>
+				<mapping target="deelnemer" value="deelnemer" operand="convert_items" template='{ "naam": value["naam"], "email": value["email"], }'></mapping>
+				<mapping operand="set" target="trainingType" value="type"></mapping>
+			</snapshot-handler>
+			<query graphql-namespace="Training" field-name="get" type="get" authorization="role" use-canonical-search="false" role="administrator"></query>
+			<query graphql-namespace="Training" field-name="filter" type="filter" authorization="role" use-canonical-search="false" role="administrator"></query>
+		</view>
+		<view name="Contactpersoon" data-retention-days="-1" exclude-notification="false">
+			<field name="naam" type="String"></field>
+			<field name="email" type="String"></field>
+			<field name="telefoonNummer" type="String"></field>
+		</view>
+		<view name="Deelnemer" data-retention-days="-1" exclude-notification="false">
+			<field name="naam" type="String"></field>
+			<field name="email" type="String"></field>
+		</view>
+	</views>
+	<projections>
+	</projections>
+	<notifiers>
+		<notifier name="SetupEnvironment">
+			<trigger source="@afterDeployment">
+				<mapping target="dummy" value="#''"></mapping>
+			</trigger>
+			<activity type="iam-create-systemuser" fail-silent="true" id="vMB9LZ"></activity>
+			<activity id="vkYuPh" fail-silent="true" type="create-iam-group" group-name="#'administrator'"></activity>
+			<activity id="wjJU3t" fail-silent="true" group-name="#'administrator'" type="add-user-to-iam-group" username="#'system-user'"></activity>
+		</notifier>
+	</notifiers>
+	<functional-scenarios clean-db="true" clean-iam="true" minimum-event-coverage="80" minimum-view-coverage="80">
+	</functional-scenarios>
+</draftsman>

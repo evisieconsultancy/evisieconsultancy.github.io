@@ -1,0 +1,19 @@
+<!-- This file is managed by Tracepaper -->
+<template x-component="Training-filter">
+    <div x-import="tables;query-form">
+
+        <!-- The query object -->
+        <draftsman-query alias="Trainingfilter" x-include="/prepared-statements/views/Training/filter.txt" authenticated>
+        </draftsman-query>
+
+        <!-- The form definition -->
+        <div  style="display:none;" id="Trainingfilter"
+              x-include="/form-definitions/Training/filter.json"></div>
+
+        <!-- The query form -->
+        <ui-query-form alias="Trainingfilter"></ui-query-form>
+
+        <!-- The data view --><ui-collection-table alias="Trainingfilter" path="filter.resultset"></ui-collection-table>
+
+    </div>
+</template>

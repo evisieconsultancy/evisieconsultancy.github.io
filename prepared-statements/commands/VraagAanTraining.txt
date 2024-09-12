@@ -1,0 +1,8 @@
+# This file is managed by Tracepaper
+mutation VraagAan($aanvraagId: String = "", $type: String = "", $naamOrganisatie: String = "", $locatieOrganisatie: String = "", $voorkeursDag: String = "geen voorkeur", $klantCase: String = "", $contactpersoon: [VraagAanTraining_Contactpersoon!] = [], $deelnemer: [VraagAanTraining_Deelnemer!] = []) {
+  Training{
+    vraagAan(input: {aanvraagId: $aanvraagId,type: $type,naamOrganisatie: $naamOrganisatie,locatieOrganisatie: $locatieOrganisatie,voorkeursDag: $voorkeursDag,klantCase: $klantCase,contactpersoon: $contactpersoon,deelnemer: $deelnemer}) {
+       correlationId
+    }
+  }
+}

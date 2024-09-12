@@ -1,0 +1,25 @@
+# This file is NOT managed by Tracepaper, and can be customized.
+query FilterTraining {
+  Training {
+    filter {
+       resultset { 
+        key
+        aanvraagId
+        trainingType
+        naamOrganisatie
+        locatieOrganisatie
+        voorkeursDag
+        klantCase
+        deelnemer {
+          naam
+          email
+        } 
+        contactpersoon {
+          naam
+          email
+          telefoonNummer
+        } 
+      }
+    }
+  }
+}
