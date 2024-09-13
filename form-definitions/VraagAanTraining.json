@@ -4,6 +4,14 @@
     "message": "This file is managed by Tracepaper"
   },
   {
+    "name": "aanvraagId",
+    "title": "Aanvraagid",
+    "type": "String",
+    "pattern": "",
+    "placeholder": "",
+    "default": ""
+  },
+  {
     "name": "type",
     "title": "Type",
     "type": "String",

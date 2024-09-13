@@ -7,7 +7,7 @@
 	</global>
 	<events>
 		<event graphql-namespace="Training" graphql-name="vraagAan" name="VraagAanTrainingRequested" type="ActorEvent">
-			<field name="aanvraagId" type="String" auto-fill="uuid"></field>
+			<field name="aanvraagId" type="String"></field>
 			<field name="type" type="String" pattern="{{TrainingType}}"></field>
 			<field name="naamOrganisatie" type="String"></field>
 			<field name="locatieOrganisatie" type="String"></field>
@@ -67,6 +67,10 @@
 						<mapping target="contactpersoon" value="contactpersoon"></mapping>
 						<mapping target="deelnemer" value="deelnemer"></mapping>
 					</trigger>
+					<processor type="validator" condition="flow.type != ''" id="7beWyU4" exception="Geen training opgegeven"></processor>
+					<processor type="validator" condition="flow.naamOrganisatie != ''" id="7beWyU1" exception="Organisatie naam mag niet leeg zijn"></processor>
+					<processor type="validator" condition="flow.locatieOrganisatie != ''" id="7beWyU2" exception="Organisatie locatie mag niet leeg zijn"></processor>
+					<processor type="validator" condition="flow.klantCase != ''" id="7beWyU3" exception="Klant casus mag niet leeg zijn"></processor>
 					<processor type="validator" condition="len(flow.contactpersoon) == 1" id="7beWyU" exception="Er moet exact 1 contactpersoon opgegeven zijn"></processor>
 					<processor condition="len(flow.deelnemer) in [1,2]" type="validator" exception="Er kunnen 1 of 2 deelnemers opgegeven worden" id="dUG8sh"></processor>
 					<processor type="emit-event" ref="TrainingCreated" id="YlCcdW">
@@ -208,6 +212,7 @@
 	<functional-scenarios clean-db="true" clean-iam="true" minimum-event-coverage="80" minimum-view-coverage="80">
 		<scenario extends="" name="VraagTrainingAan">
 			<activity path="Training.vraagAan" type="mutation" description="Vraag training aan" id="AGGmMZ">
+				<input name="aanvraagId" type="String" value="1234"></input>
 				<input name="type" type="String" value="Applicatiebeheer HR"></input>
 				<input name="naamOrganisatie" type="String" value="Draftsman.io"></input>
 				<input name="locatieOrganisatie" type="String" value="Kerkrade"></input>
