@@ -56,7 +56,7 @@
 				<field name="locatieOrganisatie" type="String"></field>
 				<field name="voorkeursDag" type="String"></field>
 				<field name="klantCase" type="String"></field>
-				<command name="Create">
+				<command name="Create" create-command="true">
 					<trigger source="VraagAanTrainingRequested" key-field="aanvraagId">
 						<mapping target="aanvraagId" value="aanvraagId"></mapping>
 						<mapping target="type" value="type"></mapping>
