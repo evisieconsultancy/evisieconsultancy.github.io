@@ -55,6 +55,7 @@
         let prepared = JSON.parse(JSON.stringify(command));
         prepared.deelnemer = prepared.deelnemer.filter(x => x.naam);
         prepared.contactpersoon = prepared.contactpersoon.filter(x => x.naam && x.email && x.telefoonNummer);
+        console.log(prepared);
         return prepared;
     }
 </script>
@@ -65,13 +66,15 @@
             <img src="/assets/academie2.png"/>
         </figure>
         <div class="card-body" x-data="{step: $persist(1).using(sessionStorage), command: $persist(initialize()).using(sessionStorage),error_message: ''}">
+            <div class="overflow-x-auto">
             <ul class="steps" x-show="step < 6" x-cloak x-transition>
-                <li class="step step-primary">Training</li>
-                <li :class="step > 1 ? 'step step-primary' : 'step'">Bedrijf</li>
-                <li :class="step > 2 ? 'step step-primary' : 'step'">Casus</li>
-                <li :class="step > 3 ? 'step step-primary' : 'step'">Deelnemers</li>
-                <li :class="step > 4 ? 'step step-primary' : 'step'">Contactpersoon</li>
+                <li class="step step-primary"><span class="invisible lg:visible">Training</span></li>
+                <li :class="step > 1 ? 'step step-primary' : 'step'"><span class="invisible lg:visible">Bedrijf</span></li>
+                <li :class="step > 2 ? 'step step-primary' : 'step'"><span class="invisible lg:visible">Casus</span></li>
+                <li :class="step > 3 ? 'step step-primary' : 'step'"><span class="invisible lg:visible">Deelnemers</span></li>
+                <li :class="step > 4 ? 'step step-primary' : 'step'"><span class="invisible lg:visible">Contactpersoon</span></li>
             </ul>
+            </div>
 
             <div x-show="step == 1" x-cloak x-transition>
                 <ul class="menu bg-primary-content rounded-box mt-5">
