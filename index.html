@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <meta name="description" content="Generated example"/>
-    <title>Getting Started</title>
-    <link rel="icon" type="image/x-icon" href="/assets/draftsman-logo.png"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <title></title>
+
+    <!-- Externe scripts en CSS -->
     <script src="/js/configuration.js"></script>
     <script src="/js/configuration-staging.js"></script>
-
-    <link rel="stylesheet" href="/css/draftsman.css"/>
+    <link rel="stylesheet" href="/css/draftsman.css" />
     <script src="/js/framework.js"></script>
     <script src="/js/cache.js"></script>
     <script src="https://unpkg.com/@vimesh/ui"></script>
@@ -17,95 +17,212 @@
     <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
     <script src="https://unpkg.com/alpinejs" defer></script>
 
-    <!--
-        This example uses bootstrap 5 as it's CSS framework
-        But feel free to use your own preference.
-    -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
-          integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    <!-- DaisyUI wordt eerst geladen -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
 
+    <!-- Tailwind CSS wordt na DaisyUI geladen -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom kleuren voor DaisyUI via CSS variabelen -->
     <style>
-            code {
-              display: block;
-              white-space: pre-wrap
-            }
-            .scrollbar {
-                height:85vh;
-                overflow-y:auto;
-                padding: 1rem;
-            }
-            .scrollbar::-webkit-scrollbar {
-                width: 10px;
-            }
-            .scrollbar::-webkit-scrollbar-track {
-                border-radius: 8px;
-                background-color: #e7e7e7;
-                border: 1px solid #cacaca;
-            }
-            .scrollbar::-webkit-scrollbar-thumb {
-                border-radius: 8px;
-                background-color: #0d6efd;
-            }
-            .scrollbar-left {
-                direction: rtl;
-            }
-            .scroll-inside {
-                direction: ltr;
-            }
-
+        :root {
+          --primary: #E9428D;  /* Primaire kleur uit het logo */
+          --secondary: #33033D; /* Secundaire donkere kleur */
+          --accent: #F09269;    /* Accentkleur */
+          --neutral: #B0ECE5;   /* Neutrale kleur */
+          --base-100: #E2D5EA;  /* Achtergrondkleur */
+        }
     </style>
 </head>
-<body class="d-flex flex-column h-100" x-data x-import="navbar">
-<main class="flex-shrink-0">
-    <ui-navbar></ui-navbar>
-    <br>
-    <div class="container" x-data="{toc: []}">
-        <!-- Render the ReadMe on this page -->
-        <script src=" https://unpkg.com/showdown/dist/showdown.min.js"></script>
-        <script>
-                    var converter = new showdown.Converter();
-        </script>
+<body x-data class="bg-base-200">
 
-        <template x-component="toc-section">
-            <nav class="nav nav-pills flex-column">
-                <template x-for="item in $prop('toc')" :key="item.id">
-                    <div x-data="{spacer: ''}" x-init="spacer = $prop('spacer')">
-                        <a class="nav-link toc" :href="'#' + item.id" :id="'handle-' + item.id">
-                            <span x-html="spacer"></span>
-                            <span x-text="item.title"></span>
-                        </a>
-                        <template x-if="item.toc.length != 0">
-                            <ui-toc-section :toc="item.toc" :spacer="spacer + '&nbsp;&nbsp;&nbsp;'"></ui-toc-section>
-                        </template>
-                    </div>
-                </template>
-            </nav>
-        </template>
+<script>
+    function initialize(){
+        return {deelnemer: [{},{}], contactpersoon:[{}]};
+    }
+    function prepare(command){
+        let prepared = JSON.parse(JSON.stringify(command));
+        prepared.deelnemer = prepared.deelnemer.filter(x => x.naam);
+        prepared.contactpersoon = prepared.contactpersoon.filter(x => x.naam && x.email && x.telefoonNummer);
+        return prepared;
+    }
+</script>
+<div class="relative w-full h-screen flex items-center justify-center">
 
-        <div class="row">
-            <div class="col-4">
-                <div class="scrollbar scrollbar-left">
-                    <nav class="h-100 flex-column align-items-stretch pe-4 border-end scroll-inside">
-                        <ui-toc-section :toc="toc" :spacer="''"></ui-toc-section>
-                    </nav>
-                </div>
+    <div class="card lg:card-side bg-base-100 shadow-xl lg:w-[75%] lg:h-[55%]">
+        <figure class="lg:w-[40%]">
+            <img src="/assets/academie2.png"/>
+        </figure>
+        <div class="card-body" x-data="{step: $persist(1).using(sessionStorage), command: $persist(initialize()).using(sessionStorage)}">
+            <ul class="steps" x-show="step < 6" x-cloak x-transition>
+                <li class="step step-primary">Training</li>
+                <li :class="step > 1 ? 'step step-primary' : 'step'">Bedrijf</li>
+                <li :class="step > 2 ? 'step step-primary' : 'step'">Casus</li>
+                <li :class="step > 3 ? 'step step-primary' : 'step'">Deelnemers</li>
+                <li :class="step > 4 ? 'step step-primary' : 'step'">Contactpersoon</li>
+            </ul>
+
+            <div x-show="step == 1" x-cloak x-transition>
+                <ul class="menu bg-primary-content rounded-box mt-5">
+                    <li @click="step += 1;command.type = 'Procesbeheer HR'"><a>Procesbeheer HR</a></li>
+                    <li @click="step += 1;command.type = 'Procesbeheer Payroll'"><a>Procesbeheer Payroll</a></li>
+                    <li @click="step += 1;command.type = 'Applicatiebeheer HR'"><a>Applicatiebeheer HR</a></li>
+                </ul>
+            </div>
+
+            <div x-show="step == 2" x-cloak x-transition>
+                <label class="input input-bordered flex items-center gap-2 mt-5">
+                    Bedrijf
+                    <input type="text" class="grow" placeholder="Oragnisatie naam" x-model="command.naamOrganisatie"/>
+                </label>
+
+                <label class="input input-bordered flex items-center gap-2 mt-2">
+                    Locatie
+                    <input type="text" class="grow" placeholder="Vestigings plaats" x-model="command.locatieOrganisatie"/>
+                </label>
+            </div>
+
+            <div x-show="step == 3" x-cloak x-transition>
+
+                <textarea class="textarea textarea-bordered w-full"
+                          rows="5"
+                          x-model="command.klantCase"
+                          placeholder="Klant casus"></textarea>
+
+                <label class="input input-bordered flex items-center gap-2 mt-5">
+                    Voorkeurs dag
+                    <input type="text" class="grow" placeholder="Geen voorkeur" x-model="command.voorkeursDag"/>
+                </label>
+            </div>
+
+            <div x-show="step == 4" x-cloak x-transition>
+
+                <label class="input input-bordered flex items-center gap-2 mt-5">
+                    Deelnemer 1
+                    <input type="text" class="grow" placeholder="Voornaam Achternaam" x-model="command.deelnemer[0].naam"/>
+                </label>
+
+                <label class="input input-bordered flex items-center gap-2 mt-2">
+                    Email
+                    <input type="text" class="grow" placeholder="email adres (optioneel)" x-model="command.deelnemer[0].email"/>
+                </label>
+
+                <label class="input input-bordered flex items-center gap-2 mt-5">
+                    Deelnemer 2
+                    <input type="text" class="grow" placeholder="Voornaam Achternaam" x-model="command.deelnemer[1].naam"/>
+                </label>
+
+                <label class="input input-bordered flex items-center gap-2 mt-2">
+                    Email
+                    <input type="text" class="grow" placeholder="email adres (optioneel)" x-model="command.deelnemer[1].email"/>
+                </label>
 
             </div>
 
-            <div class="col-8">
-                <div x-ref="target" class="scrollbar" @scroll="update_toc_highlight($refs.target)">
-                </div>
+            <div x-show="step == 5" x-cloak x-transition>
+                <label class="input input-bordered flex items-center gap-2 mt-5">
+                    Contactpersoon
+                    <input type="text" class="grow" placeholder="Voornaam Achternaam" x-model="command.contactpersoon[0].naam"/>
+                </label>
+
+                <label class="input input-bordered flex items-center gap-2 mt-2">
+                    Email
+                    <input type="email" class="grow" placeholder="email adres" x-model="command.contactpersoon[0].email"/>
+                </label>
+
+                <label class="input input-bordered flex items-center gap-2 mt-2">
+                    Telefoon nummer
+                    <input type="text" class="grow" placeholder="+31612345678" x-model="command.contactpersoon[0].telefoonNummer"/>
+                </label>
             </div>
 
+            <div x-show="step == 6" x-cloak x-transition>
+                <table class="table table-xs">
+                    <tr>
+                        <th scope="row">Training</th>
+                        <td x-text="command.type"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Bedrijf</th>
+                        <td x-text="command.naamOrganisatie"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Locatie</th>
+                        <td x-text="command.locatieOrganisatie"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Klant Casus</th>
+                        <td>
+                            <p class="w-[30vw]" x-text="command.klantCase"></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Voorkeurs dag</th>
+                        <td>
+                            <p class="w-[30vw]" x-text="command.voorkeursDag"></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Deelnemers</th>
+                        <td>
+                            <template x-for="deelnemer in command.deelnemer">
+                                <table class="table table-xs">
+                                    <tr>
+                                        <th scope="row">Naam</th>
+                                        <td x-text="deelnemer.naam"></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Email</th>
+                                        <td x-text="deelnemer.email"></td>
+                                    </tr>
+                                </table>
+                            </template>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Contactpersoon</th>
+                        <td>
+                            <template x-for="contact in command.contactpersoon">
+                                <table class="table table-xs">
+                                    <tr>
+                                        <th scope="row">Naam</th>
+                                        <td x-text="contact.naam"></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Email</th>
+                                        <td x-text="contact.email"></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Tel</th>
+                                        <td x-text="contact.telefoonNummer"></td>
+                                    </tr>
+                                </table>
+                            </template>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <draftsman-mutation command="VraagAanTraining" x-include="/prepared-statements/commands/VraagAanTraining.txt">
+            </draftsman-mutation>
+            <draftsman-trace command="VraagAanTraining"
+                             status="success"
+                             @trace="location = '/bedankt'"><!--component="Notifier-"-->
+            </draftsman-trace>
+            <div class="card-actions justify-end">
+                <button x-show="step > 1 && step" x-cloak x-transition
+                        @click="step += -1"
+                        class="btn btn-outline btn-primary">Vorige</button>
+                <button x-show="step > 1 && step < 6" x-cloak x-transition
+                        @click="step += 1"
+                        class="btn btn-outline btn-primary">Volgende</button>
+                <button x-show="step == 6" x-cloak x-transition
+                        @click="$store.mutation.send('VraagAanTraining',prepare(command));"
+                        class="btn btn-outline btn-success">Verstuur</button>
+            </div>
         </div>
-
-        <div x-include="/docs.md" x-effect="setTimeout(function(){
-                    $refs.target.innerHTML = converter.makeHtml($el.innerHTML);
-                    toc = create_toc($refs.target);
-                },100);" style="display:none;"></div>
     </div>
-</main>
+</div>
+
 </body>
 </html>
