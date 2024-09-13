@@ -220,7 +220,10 @@
 				<mapping target="deelnemer" value="deelnemer"></mapping>
 			</trigger>
 			<activity id="L8CAWh" type="fetch-property" key="mailgunKey" name="apiKey"></activity>
-			<activity id="aaMYxB" type="code" python-file="lib/MailGun.py" handler="verstuur_aanvraag"></activity>
+			<activity id="aaMYxB" type="code" python-file="lib/MailGun.py" handler="prepare"></activity>
+			<activity id="d4wp5Q" type="render-template" name="confirmation" template-file="templates/confirmation.html"></activity>
+			<activity id="666MZQ" name="aanvraag" type="render-template" template-file="templates/aanvraag.html"></activity>
+			<activity id="qOBTlg" type="code" python-file="lib/MailGun.py" handler="verstuur_aanvraag"></activity>
 		</notifier>
 	</notifiers>
 	<functional-scenarios clean-db="true" clean-iam="true" minimum-event-coverage="80" minimum-view-coverage="80">
