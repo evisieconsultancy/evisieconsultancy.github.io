@@ -181,7 +181,7 @@
 				<mapping target="voorkeursDag" value="voorkeursDag" operand="set"></mapping>
 				<mapping target="klantCase" value="klantCase" operand="set"></mapping>
 				<mapping target="contactpersoon" value="contactpersoon" operand="convert_items" template='{ "naam": value["naam"], "email": value["email"], "telefoonNummer": value["telefoonNummer"], }'></mapping>
-				<mapping target="deelnemer" value="deelnemer" operand="convert_items" template='{ "naam": value["naam"], "email": value["email"], }'></mapping>
+				<mapping target="deelnemer" value="deelnemer" operand="convert_items" template='{ "naam": value["naam"] if "naam" in value else "", "email": value["email"] if "email" in value else "", }'></mapping>
 				<mapping operand="set" target="trainingType" value="type"></mapping>
 			</snapshot-handler>
 			<query graphql-namespace="Training" field-name="get" type="get" authorization="role" use-canonical-search="false" role="administrator"></query>
