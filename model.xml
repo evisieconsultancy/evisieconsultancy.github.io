@@ -7,7 +7,7 @@
 	</global>
 	<events>
 		<event graphql-namespace="Training" graphql-name="vraagAan" name="VraagAanTrainingRequested" type="ActorEvent">
-			<field name="aanvraagId" type="String"></field>
+			<field name="aanvraagId" type="String" auto-fill="uuid"></field>
 			<field name="type" type="String" pattern="{{TrainingType}}"></field>
 			<field name="naamOrganisatie" type="String"></field>
 			<field name="locatieOrganisatie" type="String"></field>
@@ -208,7 +208,6 @@
 	<functional-scenarios clean-db="true" clean-iam="true" minimum-event-coverage="80" minimum-view-coverage="80">
 		<scenario extends="" name="VraagTrainingAan">
 			<activity path="Training.vraagAan" type="mutation" description="Vraag training aan" id="AGGmMZ">
-				<input name="aanvraagId" type="String" value="1234"></input>
 				<input name="type" type="String" value="Applicatiebeheer HR"></input>
 				<input name="naamOrganisatie" type="String" value="Draftsman.io"></input>
 				<input name="locatieOrganisatie" type="String" value="Kerkrade"></input>
@@ -219,9 +218,8 @@
 				<expected-trace command="Education.Training.Create" status="success"></expected-trace>
 			</activity>
 			<activity path="-select-" type="grant-role" description="Make sure user is administrator" role="administrator" id="Tj9pfP"></activity>
-			<activity path="Training.get" description="Check if traing is created" type="query" view="Training" id="tOe4jA">
-				<input name="key" type="String" value="1234"></input>
-				<expect-value name="naamOrganisatie" type="String" value="Draftsman.io"></expect-value>
+			<activity path="Training.filter" type="query" view="Training" description="Controleer of de aanvraag is aangemaakt" id="yUpKwk">
+				<expect-value name="resultset.0.naamOrganisatie" type="String" value="Draftsman.io"></expect-value>
 			</activity>
 		</scenario>
 	</functional-scenarios>
