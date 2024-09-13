@@ -37,8 +37,19 @@
 <body x-data class="bg-base-200">
 
 <script>
+    function makeid(length) {
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const charactersLength = characters.length;
+        let counter = 0;
+        while (counter < length) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+          counter += 1;
+        }
+        return result;
+    }
     function initialize(){
-        return {deelnemer: [{},{}], contactpersoon:[{}]};
+        return {aanvraagId: makeid(6),deelnemer: [{},{}], contactpersoon:[{}]};
     }
     function prepare(command){
         let prepared = JSON.parse(JSON.stringify(command));
@@ -53,7 +64,7 @@
         <figure class="lg:w-[40%]">
             <img src="/assets/academie2.png"/>
         </figure>
-        <div class="card-body" x-data="{step: $persist(1).using(sessionStorage), command: $persist(initialize()).using(sessionStorage)}">
+        <div class="card-body" x-data="{step: $persist(1).using(sessionStorage), command: $persist(initialize()).using(sessionStorage),error_message: ''}">
             <ul class="steps" x-show="step < 6" x-cloak x-transition>
                 <li class="step step-primary">Training</li>
                 <li :class="step > 1 ? 'step step-primary' : 'step'">Bedrijf</li>
@@ -137,6 +148,22 @@
             </div>
 
             <div x-show="step == 6" x-cloak x-transition>
+
+                <div role="alert" class="alert alert-error" x-show="error_message" x-cloak x-transition>
+                    <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-6 w-6 shrink-0 stroke-current"
+                            fill="none"
+                            viewBox="0 0 24 24">
+                        <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span x-html="error_message"></span>
+                </div>
+
                 <table class="table table-xs">
                     <tr>
                         <th scope="row">Training</th>
@@ -205,19 +232,32 @@
 
             <draftsman-mutation command="VraagAanTraining" x-include="/prepared-statements/commands/VraagAanTraining.txt">
             </draftsman-mutation>
+<!--            <draftsman-trace command="VraagAanTraining"-->
+<!--                             status="success"-->
+<!--                             @trace="command = initialize();step = 1;location = 'https://procesbouwers.nl'">&lt;!&ndash;component="Notifier-"&ndash;&gt;-->
+<!--            </draftsman-trace>-->
             <draftsman-trace command="VraagAanTraining"
-                             status="success"
-                             @trace="location = '/bedankt'"><!--component="Notifier-"-->
+                             status="error"
+                             @trace="error_message = $event.detail.message"><!--component="Notifier-"-->
             </draftsman-trace>
+            <draftsman-trace command="VraagAanTraining"
+                             status="failed"
+                             @trace="error_message = $event.detail.message"><!--component="Notifier-"-->
+            </draftsman-trace>
+            <draftsman-trace command="VraagAanTraining"
+                             @trace="if (!$event.detail.command){error_message += '<br>' + $event.detail.message}"><!--component="Notifier-"-->
+            </draftsman-trace>
+
             <div class="card-actions justify-end">
                 <button x-show="step > 1 && step" x-cloak x-transition
+                        x-ref="back"
                         @click="step += -1"
                         class="btn btn-outline btn-primary">Vorige</button>
                 <button x-show="step > 1 && step < 6" x-cloak x-transition
                         @click="step += 1"
                         class="btn btn-outline btn-primary">Volgende</button>
                 <button x-show="step == 6" x-cloak x-transition
-                        @click="$store.mutation.send('VraagAanTraining',prepare(command));"
+                        @click="$store.mutation.send('VraagAanTraining',prepare(command));$el.disabled = 'true';$refs.back.disabled = 'true'"
                         class="btn btn-outline btn-success">Verstuur</button>
             </div>
         </div>
