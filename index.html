@@ -235,10 +235,10 @@
 
             <draftsman-mutation command="VraagAanTraining" x-include="/prepared-statements/commands/VraagAanTraining.txt">
             </draftsman-mutation>
-<!--            <draftsman-trace command="VraagAanTraining"-->
-<!--                             status="success"-->
-<!--                             @trace="command = initialize();step = 1;location = 'https://procesbouwers.nl'">&lt;!&ndash;component="Notifier-"&ndash;&gt;-->
-<!--            </draftsman-trace>-->
+            <draftsman-trace command="VraagAanTraining"
+                             status="success"
+                             @trace="command = initialize();step = 1;location = 'https://procesbouwers.nl'"><!--component="Notifier-"-->
+            </draftsman-trace>
             <draftsman-trace command="VraagAanTraining"
                              status="error"
                              @trace="error_message = $event.detail.message"><!--component="Notifier-"-->
