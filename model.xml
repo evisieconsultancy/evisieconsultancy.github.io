@@ -208,6 +208,20 @@
 			<activity id="vkYuPh" fail-silent="true" type="create-iam-group" group-name="#'administrator'"></activity>
 			<activity id="wjJU3t" fail-silent="true" group-name="#'administrator'" type="add-user-to-iam-group" username="#'system-user'"></activity>
 		</notifier>
+		<notifier name="SendConfirmation">
+			<trigger source="TrainingCreated">
+				<mapping target="aanvraagId" value="aanvraagId"></mapping>
+				<mapping target="type" value="type"></mapping>
+				<mapping target="naamOrganisatie" value="naamOrganisatie"></mapping>
+				<mapping target="locatieOrganisatie" value="locatieOrganisatie"></mapping>
+				<mapping target="voorkeursDag" value="voorkeursDag"></mapping>
+				<mapping target="klantCase" value="klantCase"></mapping>
+				<mapping target="contactpersoon" value="contactpersoon"></mapping>
+				<mapping target="deelnemer" value="deelnemer"></mapping>
+			</trigger>
+			<activity id="L8CAWh" type="fetch-property" key="mailgunKey" name="apiKey"></activity>
+			<activity id="aaMYxB" type="code" python-file="lib/MailGun.py" handler="verstuur_aanvraag"></activity>
+		</notifier>
 	</notifiers>
 	<functional-scenarios clean-db="true" clean-iam="true" minimum-event-coverage="80" minimum-view-coverage="80">
 		<scenario extends="" name="VraagTrainingAan">
