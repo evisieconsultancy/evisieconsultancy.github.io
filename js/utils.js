@@ -5,7 +5,7 @@ document.addEventListener('alpine:init', async () => {
         //By default draftsman will not wait for teleports
         Draftsman.contains_teleports = false;
         //Optionally you can disable data caching for this page
-        //Draftsman.disable_cache_for_page();
+        Draftsman.disable_cache_for_page();
     },1);
 });
 
