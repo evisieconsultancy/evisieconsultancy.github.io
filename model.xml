@@ -26,7 +26,6 @@
 				<field name="naam" type="String"></field>
 				<field name="email" type="String"></field>
 				<field name="telefoonNummer" type="String"></field>
-				<field name="telefoonNummer" type="String"></field>
 			</nested-object>
 		</event>
 		<event name="FileUploaded" type="DomainEvent" source="appsync">
