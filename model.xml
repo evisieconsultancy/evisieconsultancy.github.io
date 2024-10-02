@@ -156,9 +156,6 @@
 				<mapping target="type" value="type"></mapping>
 				<mapping target="naamOrganisatie" value="naamOrganisatie"></mapping>
 				<mapping target="locatieOrganisatie" value="locatieOrganisatie"></mapping>
-				<mapping target="voorkeursDag" value="voorkeursDag"></mapping>
-				<mapping target="klantCase" value="klantCase"></mapping>
-				<mapping target="contactpersoon" value="contactpersoon"></mapping>
 				<mapping target="deelnemer" value="deelnemer"></mapping>
 			</trigger>
 			<activity id="L8CAWh" type="fetch-property" key="mailgunKey" name="apiKey"></activity>
