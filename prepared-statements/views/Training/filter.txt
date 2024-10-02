@@ -8,17 +8,11 @@ query FilterTraining {
         trainingType
         naamOrganisatie
         locatieOrganisatie
-        voorkeursDag
         klantCase
         deelnemer {
           naam
           email
-        } 
-        contactpersoon {
-          naam
-          email
-          telefoonNummer
-        } 
+        }
       }
     }
   }

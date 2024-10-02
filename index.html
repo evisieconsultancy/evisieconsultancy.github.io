@@ -49,12 +49,11 @@
         return result;
     }
     function initialize(){
-        return {aanvraagId: makeid(6),deelnemer: [{},{}], contactpersoon:[{}]};
+        return {aanvraagId: makeid(6),deelnemer: [{},{}]};
     }
     function prepare(command){
         let prepared = JSON.parse(JSON.stringify(command));
         prepared.deelnemer = prepared.deelnemer.filter(x => x.naam);
-        prepared.contactpersoon = prepared.contactpersoon.filter(x => x.naam && x.email && x.telefoonNummer);
         console.log(prepared);
         return prepared;
     }
@@ -67,12 +66,10 @@
         </figure>
         <div class="card-body overflow-y-auto" x-data="{step: $persist(1).using(sessionStorage), command: $persist(initialize()).using(sessionStorage),error_message: ''}">
             <div class="overflow-x-auto">
-                <ul class="steps" x-show="step < 6" x-cloak x-transition>
+                <ul class="steps" x-show="step < 4" x-cloak x-transition>
                     <li class="step step-primary"><span class="hidden lg:inline">Training</span></li>
                     <li :class="step > 1 ? 'step step-primary' : 'step'"><span class="hidden lg:inline">Bedrijf</span></li>
-                    <li :class="step > 2 ? 'step step-primary' : 'step'"><span class="hidden lg:inline">Casus</span></li>
-                    <li :class="step > 3 ? 'step step-primary' : 'step'"><span class="hidden lg:inline">Deelnemers</span></li>
-                    <li :class="step > 4 ? 'step step-primary' : 'step'"><span class="hidden lg:inline">Contactpersoon</span></li>
+                    <li :class="step > 2 ? 'step step-primary' : 'step'"><span class="hidden lg:inline">Deelnemers</span></li>
                 </ul>
             </div>
 
@@ -140,19 +137,6 @@
 
             <div x-show="step == 3" x-cloak x-transition>
 
-                <textarea class="textarea textarea-bordered w-full"
-                          rows="5"
-                          x-model="command.klantCase"
-                          placeholder="Klant casus"></textarea>
-
-                <label class="input input-bordered flex items-center gap-2 mt-5">
-                    Voorkeurs dag
-                    <input type="text" class="grow" placeholder="Geen voorkeur" x-model="command.voorkeursDag"/>
-                </label>
-            </div>
-
-            <div x-show="step == 4" x-cloak x-transition>
-
                 <label class="input input-bordered flex items-center gap-2 mt-5">
                     Deelnemer 1
                     <input type="text" class="grow" placeholder="Voornaam Achternaam" x-model="command.deelnemer[0].naam"/>
@@ -160,7 +144,12 @@
 
                 <label class="input input-bordered flex items-center gap-2 mt-2">
                     Email
-                    <input type="text" class="grow" placeholder="email adres (optioneel)" x-model="command.deelnemer[0].email"/>
+                    <input type="text" class="grow" placeholder="email adres" x-model="command.deelnemer[0].email"/>
+                </label>
+
+                <label class="input input-bordered flex items-center gap-2 mt-2">
+                    Telefoon nummer
+                    <input type="text" class="grow" placeholder="+31612345678" x-model="command.deelnemer[0].telefoonNummer"/>
                 </label>
 
                 <label class="input input-bordered flex items-center gap-2 mt-5">
@@ -173,26 +162,13 @@
                     <input type="text" class="grow" placeholder="email adres (optioneel)" x-model="command.deelnemer[1].email"/>
                 </label>
 
-            </div>
-
-            <div x-show="step == 5" x-cloak x-transition>
-                <label class="input input-bordered flex items-center gap-2 mt-5">
-                    Contactpersoon
-                    <input type="text" class="grow" placeholder="Voornaam Achternaam" x-model="command.contactpersoon[0].naam"/>
-                </label>
-
-                <label class="input input-bordered flex items-center gap-2 mt-2">
-                    Email
-                    <input type="email" class="grow" placeholder="email adres" x-model="command.contactpersoon[0].email"/>
-                </label>
-
                 <label class="input input-bordered flex items-center gap-2 mt-2">
                     Telefoon nummer
-                    <input type="text" class="grow" placeholder="+31612345678" x-model="command.contactpersoon[0].telefoonNummer"/>
+                    <input type="text" class="grow" placeholder="+31612345678" x-model="command.deelnemer[1].telefoonNummer"/>
                 </label>
             </div>
 
-            <div x-show="step == 6" x-cloak x-transition>
+            <div x-show="step == 4" x-cloak x-transition>
 
                 <div role="alert" class="alert alert-error" x-show="error_message" x-cloak x-transition>
                     <svg
@@ -223,18 +199,6 @@
                         <td x-text="command.locatieOrganisatie"></td>
                     </tr>
                     <tr>
-                        <th scope="row">Klant Casus</th>
-                        <td>
-                            <p class="w-[30vw]" x-text="command.klantCase"></p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Voorkeurs dag</th>
-                        <td>
-                            <p class="w-[30vw]" x-text="command.voorkeursDag"></p>
-                        </td>
-                    </tr>
-                    <tr>
                         <th scope="row">Deelnemers</th>
                         <td>
                             <template x-for="deelnemer in command.deelnemer">
@@ -247,26 +211,9 @@
                                         <th scope="row">Email</th>
                                         <td x-text="deelnemer.email"></td>
                                     </tr>
-                                </table>
-                            </template>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Contactpersoon</th>
-                        <td>
-                            <template x-for="contact in command.contactpersoon">
-                                <table class="table table-xs">
                                     <tr>
-                                        <th scope="row">Naam</th>
-                                        <td x-text="contact.naam"></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Email</th>
-                                        <td x-text="contact.email"></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Tel</th>
-                                        <td x-text="contact.telefoonNummer"></td>
+                                        <th scope="row">Telefoonnummer</th>
+                                        <td x-text="deelnemer.telefoonNummer"></td>
                                     </tr>
                                 </table>
                             </template>
@@ -308,16 +255,18 @@
                     function may_proceed(step, command){
                         if (step == 2 && command.naamOrganisatie && command.locatieOrganisatie){
                             return false;
+                        } else if (step == 3 && command.deelnemer[0].naam && command.deelnemer[0].email && command.deelnemer[0].telefoonNummer){
+                            return false;
                         } else {
                             return true;
                         }
                     }
                 </script>
-                <button x-show="step > 1 && step < 6" x-cloak x-transition
+                <button x-show="step > 1 && step < 4" x-cloak x-transition
                         @click="step += 1"
                         :disabled="may_proceed(step,command)"
                         class="btn btn-outline btn-primary">Volgende</button>
-                <button x-show="step == 6" x-cloak x-transition
+                <button x-show="step == 4" x-cloak x-transition
                         @click="$store.mutation.send('VraagAanTraining',prepare(command));$el.disabled = 'true';$refs.back.disabled = 'true'"
                         class="btn btn-outline btn-success">Verstuur</button>
             </div>

@@ -63,12 +63,6 @@
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Voorkeurs dag</th>
-                        <td>
-                            <p class="w-[30vw]" x-text="command.voorkeursDag"></p>
-                        </td>
-                    </tr>
-                    <tr>
                         <th scope="row">Deelnemers</th>
                         <td>
                             <template x-for="deelnemer in command.deelnemer">
@@ -81,26 +75,9 @@
                                         <th scope="row">Email</th>
                                         <td x-text="deelnemer.email"></td>
                                     </tr>
-                                </table>
-                            </template>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Contactpersoon</th>
-                        <td>
-                            <template x-for="contact in command.contactpersoon">
-                                <table class="table table-xs">
                                     <tr>
-                                        <th scope="row">Naam</th>
-                                        <td x-text="contact.naam"></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Email</th>
-                                        <td x-text="contact.email"></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Tel</th>
-                                        <td x-text="contact.telefoonNummer"></td>
+                                        <th scope="row">Telefoonnummer</th>
+                                        <td x-text="deelnemer.telefoonNummer"></td>
                                     </tr>
                                 </table>
                             </template>
