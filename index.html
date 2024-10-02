@@ -129,12 +129,12 @@
             <div x-show="step == 2" x-cloak x-transition>
                 <label class="input input-bordered flex items-center gap-2 mt-5">
                     Bedrijf
-                    <input type="text" class="grow" placeholder="Oragnisatie naam" x-model="command.naamOrganisatie"/>
+                    <input type="text" class="grow" placeholder="Organisatie naam" x-model="command.naamOrganisatie"/>
                 </label>
 
                 <label class="input input-bordered flex items-center gap-2 mt-2">
                     Locatie
-                    <input type="text" class="grow" placeholder="Vestigings plaats" x-model="command.locatieOrganisatie"/>
+                    <input type="text" class="grow" placeholder="Vestigingsplaats" x-model="command.locatieOrganisatie"/>
                 </label>
             </div>
 
@@ -304,8 +304,18 @@
                         x-ref="back"
                         @click="step += -1"
                         class="btn btn-outline btn-primary">Vorige</button>
+                <script>
+                    function may_proceed(step, command){
+                        if (step == 2 && command.naamOrganisatie && command.locatieOrganisatie){
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                </script>
                 <button x-show="step > 1 && step < 6" x-cloak x-transition
                         @click="step += 1"
+                        :disabled="may_proceed(step,command)"
                         class="btn btn-outline btn-primary">Volgende</button>
                 <button x-show="step == 6" x-cloak x-transition
                         @click="$store.mutation.send('VraagAanTraining',prepare(command));$el.disabled = 'true';$refs.back.disabled = 'true'"
