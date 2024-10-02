@@ -6,6 +6,10 @@
 		<pattern name="Email" regex="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"></pattern>
 	</global>
 	<events>
+		<event graphql-namespace="Training" graphql-name="werkCaseBij" name="WerkCaseBijTrainingRequested" type="ActorEvent">
+			<field name="aanvraagId" type="String"></field>
+			<field name="klantCase" type="String"></field>
+		</event>
 		<event graphql-namespace="Training" graphql-name="vraagAan" name="VraagAanTrainingRequested" type="ActorEvent">
 			<field name="aanvraagId" type="String"></field>
 			<field name="type" type="String" pattern="{{TrainingType}}"></field>
@@ -27,6 +31,9 @@
 				<field name="email" type="String"></field>
 				<field name="telefoonNummer" type="String"></field>
 			</nested-object>
+		</event>
+		<event name="CaseAdded" source="Education.Training" type="DomainEvent">
+			<field name="klantCase" type="String"></field>
 		</event>
 		<event name="FileUploaded" type="DomainEvent" source="appsync">
 			<field name="bucket" type="String"></field>
@@ -94,6 +101,28 @@
 }</expected-state>
 					</test-case>
 				</command>
+				<command name="AddCase">
+					<trigger source="WerkCaseBijTrainingRequested" key-field="aanvraagId">
+						<mapping target="aanvraagId" value="aanvraagId"></mapping>
+						<mapping target="klantCase" value="klantCase"></mapping>
+					</trigger>
+					<processor type="validator" condition="flow.entity.version != 0" id="wP0Rhv" exception="Aanvraag met id [{flow.aanvraagId}] bestaat niet"></processor>
+					<processor condition="flow.entity.version != 0" type="emit-event" id="IyhIBd" ref="CaseAdded">
+						<mapping target="klantCase" value="#flow.klantCase"></mapping>
+					</processor>
+					<test-case name="AddCase" trigger-event="WerkCaseBijTrainingRequested" expected-processing-status="success">
+						<input name="aanvraagId" type="String" value="dummy"></input>
+						<input name="klantCase" type="String" value="Hello World!"></input>
+						<expected domain-event="CaseAdded" id="KHGE8T">
+							<field name="klantCase" type="String" value="Hello World!"></field>
+						</expected>
+						<state>{
+  "aanvraagId": "dummy",
+  "version": 1
+}</state>
+						<expected-state pk="dummy">{"aanvraagId":"dummy","klantCase":"Hello World!"}</expected-state>
+					</test-case>
+				</command>
 				<event-handler on="TrainingCreated">
 					<mapping target="aanvraagId" value="aanvraagId" operand="set"></mapping>
 					<mapping target="type" value="type" operand="set"></mapping>
@@ -104,6 +133,9 @@
 						<mapping target="email" value="email" operand="set"></mapping>
 						<mapping operand="set" target="telefoonNummer" value="telefoonNummer"></mapping>
 					</nested-mapping>
+				</event-handler>
+				<event-handler on="CaseAdded">
+					<mapping target="klantCase" value="klantCase" operand="set"></mapping>
 				</event-handler>
 				<nested-object name="deelnemer" business-key="naam">
 					<field name="naam" type="String"></field>
@@ -178,6 +210,15 @@
 			<activity path="-select-" type="grant-role" description="Make sure user is administrator" role="administrator" id="Tj9pfP"></activity>
 			<activity path="Training.filter" type="query" view="Training" description="Controleer of de aanvraag is aangemaakt" id="yUpKwk">
 				<expect-value name="resultset.0.naamOrganisatie" type="String" value="Draftsman.io"></expect-value>
+			</activity>
+			<activity path="Training.werkCaseBij" type="mutation" description="Werk case bij" id="dDgOQg">
+				<input name="aanvraagId" type="String" value="1234"></input>
+				<input name="klantCase" type="String" value="Hello World!"></input>
+				<expected-trace command="Education.Training.AddCase" status="success"></expected-trace>
+			</activity>
+			<activity path="Training.get" type="query" view="Training" description="Controleer of case gevuld is" id="IELnN7">
+				<input name="key" type="String" value="1234"></input>
+				<expect-value name="klantCase" type="String" value="Hello World!"></expect-value>
 			</activity>
 		</scenario>
 	</functional-scenarios>

@@ -1,0 +1,8 @@
+# This file is managed by Tracepaper
+mutation WerkCaseBij($aanvraagId: String = "", $klantCase: String = "") {
+  Training{
+    werkCaseBij(input: {aanvraagId: $aanvraagId,klantCase: $klantCase}) {
+       correlationId
+    }
+  }
+}
