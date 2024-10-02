@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <title></title>
+
+    <!-- Externe scripts en CSS -->
+    <script src="/js/configuration.js"></script>
+    <script src="/js/configuration-staging.js"></script>
+    <link rel="stylesheet" href="/css/draftsman.css" />
+    <script src="/js/framework.js"></script>
+    <script src="/js/cache.js"></script>
+    <script src="https://unpkg.com/@vimesh/ui"></script>
+    <script src="/js/utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+
+    <!-- DaisyUI wordt eerst geladen -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Tailwind CSS wordt na DaisyUI geladen -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom kleuren voor DaisyUI via CSS variabelen -->
+    <style>
+        :root {
+          --primary: #E9428D;  /* Primaire kleur uit het logo */
+          --secondary: #33033D; /* Secundaire donkere kleur */
+          --accent: #F09269;    /* Accentkleur */
+          --neutral: #B0ECE5;   /* Neutrale kleur */
+          --base-100: #E2D5EA;  /* Achtergrondkleur */
+        }
+    </style>
+</head>
+<body x-data="{command: {},error_message: ''}"
+      x-init="command.aanvraagId = Draftsman.fetch_query_parameter('key')" class="bg-base-200">
+<div class="relative w-full h-screen flex items-center justify-center">
+
+    <div class="card lg:card-side bg-base-100 shadow-xl lg:w-[75%] lg:h-[55%]">
+        <figure class="lg:w-[40%]">
+            <img src="/assets/academie2.png"/>
+        </figure>
+        <div class="card-body">
+            <div role="alert" class="alert alert-error" x-show="error_message" x-cloak x-transition>
+                <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6 shrink-0 stroke-current"
+                        fill="none"
+                        viewBox="0 0 24 24">
+                    <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span x-html="error_message"></span>
+            </div>
+            <textarea class="textarea textarea-bordered w-full"
+                      rows="5"
+                      x-model="command.klantCase"
+                      placeholder="Casus omschrijving"></textarea>
+
+            <draftsman-mutation command="WerkCaseBij" x-include="/prepared-statements/commands/WerkCaseBijTraining.txt">
+            </draftsman-mutation>
+            <draftsman-trace command="WerkCaseBij"
+                             status="success"
+                             @trace="location = '/bedankt'">
+            </draftsman-trace>
+            <draftsman-trace command="WerkCaseBij"
+                             status="error"
+                             @trace="error_message = $event.detail.message"><!--component="Notifier-"-->
+            </draftsman-trace>
+            <draftsman-trace command="WerkCaseBij"
+                             status="failed"
+                             @trace="error_message = $event.detail.message"><!--component="Notifier-"-->
+            </draftsman-trace>
+            <draftsman-trace command="WerkCaseBij"
+                             @trace="if (!$event.detail.command){error_message += '<br>' + $event.detail.message}"><!--component="Notifier-"-->
+            </draftsman-trace>
+
+            <div class="card-actions justify-end">
+                <button :disabled="!command.klantCase"
+                        @click="$store.mutation.send('WerkCaseBij',command);$el.disabled = 'true';"
+                        class="btn btn-outline btn-success">Verstuur</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
