@@ -64,7 +64,9 @@
         <figure class="lg:w-[40%]">
             <img src="/assets/academie2.png"/>
         </figure>
-        <div class="card-body overflow-y-auto" x-data="{step: $persist(1).using(sessionStorage), command: $persist(initialize()).using(sessionStorage),error_message: ''}">
+        <div class="card-body overflow-y-auto"
+             x-init="command.aanvraagId = makeid(6)"
+             x-data="{step: $persist(1).using(sessionStorage), command: $persist(initialize()).using(sessionStorage),error_message: ''}">
             <div class="overflow-x-auto">
                 <ul class="steps" x-show="step < 4" x-cloak x-transition>
                     <li class="step step-primary"><span class="hidden lg:inline">Training</span></li>
@@ -148,7 +150,7 @@
                 </label>
 
                 <label class="input input-bordered flex items-center gap-2 mt-2">
-                    Telefoon nummer
+                    Telefoonnummer
                     <input type="text" class="grow" placeholder="+31612345678" x-model="command.deelnemer[0].telefoonNummer"/>
                 </label>
 
@@ -163,7 +165,7 @@
                 </label>
 
                 <label class="input input-bordered flex items-center gap-2 mt-2">
-                    Telefoon nummer
+                    Telefoonnummer
                     <input type="text" class="grow" placeholder="+31612345678" x-model="command.deelnemer[1].telefoonNummer"/>
                 </label>
             </div>
