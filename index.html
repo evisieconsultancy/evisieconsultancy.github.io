@@ -67,7 +67,7 @@
         <div class="card-body overflow-y-auto"
              x-init="command.aanvraagId = makeid(6)"
              x-data="{step: $persist(1).using(sessionStorage), command: $persist(initialize()).using(sessionStorage),error_message: ''}">
-            <div class="overflow-x-auto">
+            <div>
                 <ul class="steps" x-show="step < 4" x-cloak x-transition>
                     <li class="step step-primary"><span class="hidden lg:inline">Training</span></li>
                     <li :class="step > 1 ? 'step step-primary' : 'step'"><span class="hidden lg:inline">Bedrijf</span></li>
@@ -77,7 +77,7 @@
 
             <div x-show="step == 1" x-cloak x-transition>
                 <br>
-                Selecteer een training:
+                Selecteer een praktijkdag:
                 <ul class="menu bg-primary-content rounded-box mt-5">
                     <li @click="step += 1;command.type = 'Procesbeheer HR'"><a>Procesbeheer HR</a></li>
                     <li @click="step += 1;command.type = 'Procesbeheer Payroll'"><a>Procesbeheer Payroll</a></li>
@@ -91,25 +91,25 @@
                                 <article class="prose" x-include="/uitleg/introductie.md"></article>
                             </div>
                             <div>
-                                <h3 class="text-lg font-bold">De trainingen</h3>
+                                <h3 class="text-lg font-bold">De praktijkdagen</h3>
                                 <div class="join join-vertical w-full">
                                     <div class="collapse collapse-arrow join-item border-base-300 border">
                                         <input type="radio" name="my-accordion-4" />
-                                        <div class="collapse-title text-xl font-medium">Procesbeheer HR met AFAS Profit</div>
+                                        <div class="collapse-title text-xl font-medium">Procesbeheer HR</div>
                                         <div class="collapse-content">
                                             <article class="prose" x-include="/uitleg/hr-process.md"></article>
                                         </div>
                                     </div>
                                     <div class="collapse collapse-arrow join-item border-base-300 border">
                                         <input type="radio" name="my-accordion-4" />
-                                        <div class="collapse-title text-xl font-medium">Procesbeheer Payroll met AFAS Profit</div>
+                                        <div class="collapse-title text-xl font-medium">Procesbeheer Payroll</div>
                                         <div class="collapse-content">
                                             <article class="prose" x-include="/uitleg/payroll.md"></article>
                                         </div>
                                     </div>
                                     <div class="collapse collapse-arrow join-item border-base-300 border">
                                         <input type="radio" name="my-accordion-4" />
-                                        <div class="collapse-title text-xl font-medium">Applicatiebeheer HR met AFAS Profit</div>
+                                        <div class="collapse-title text-xl font-medium">Applicatiebeheer HR</div>
                                         <div class="collapse-content">
                                             <article class="prose" x-include="/uitleg/applicatiebeheer.md"></article>
                                         </div>
