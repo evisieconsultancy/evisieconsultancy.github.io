@@ -7,6 +7,12 @@
                     <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                         
                         <button type="button" class="btn btn-outline-primary"
+                                @click="Draftsman.empty_track_and_trace_log();component = 'SendMailGeneral'"
+                                x-show="'sendmailgeneral'.includes(search.toLowerCase())">
+                            SendMailGeneral
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-primary"
                                 @click="Draftsman.empty_track_and_trace_log();component = 'WerkCaseBijTraining'"
                                 x-show="'werkcasebijtraining'.includes(search.toLowerCase())">
                             WerkCaseBijTraining
@@ -22,6 +28,14 @@
                 </center>
             </div>
             <div class="col-6">
+                
+                <div x-show="component == 'SendMailGeneral'" x-cloak x-transition>
+                    <div x-import="commands/SendMailGeneral">
+                        <h6>SendMailGeneral</h6>
+                        <ui-SendMailGeneral></ui-SendMailGeneral>
+                    </div>
+                </div>
+
                 
                 <div x-show="component == 'WerkCaseBijTraining'" x-cloak x-transition>
                     <div x-import="commands/WerkCaseBijTraining">
